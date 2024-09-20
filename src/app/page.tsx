@@ -1,0 +1,13 @@
+"use client"
+
+import { useSession } from 'next-auth/react'
+import React from 'react'
+
+export default function Home() {
+  // const { data: session } = useSession();
+  return (
+    <div>
+      {/* {session ? `Logged in as ${session.user?.email}` : "Not logged in"} */}
+    </div>
+  );
+}

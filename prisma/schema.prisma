@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model EmRole {
+  roleId   Int      @id @default(autoincrement()) @map("role_id")
+  roleName String   @map("role_name") @db.VarChar(30)
+  // roleUpdatedAt DateTime @map("role_updated_at") @updatedAt
+  // roleDeletedAt DateTime @map("role_deleted_at")
+  // roleCreatedAt DateTime @map("role_created_at") @default(now())
+  users    EmUser[]
+
+  @@map("em_roles")
+}
+
+enum Gender {
+  Male
+  Female
+}
+model EmUser {
+  userId        Int          @id @default(autoincrement()) @map("user_id")
+  userFirstName String?      @map("user_first_name") @db.VarChar(30)
+  userLastName  String?      @map("user_last_name") @db.VarChar(30)
+  userAge       Int?         @map("user_age") @db.Integer
+  userEmail     String       @map("user_email") @db.VarChar(30)
+  userPhone     String?      @map("user_phone") @db.VarChar(200)
+  userCity      String?      @map("user_city_name") @db.VarChar(20)
+  userState     String?      @map("user_state_name") @db.VarChar(20)
+  userCountry   String?      @map("user_country_name") @db.VarChar(20)
+  userUpdatedAt DateTime?    @default(now()) @map("user_updated_at")
+  userDeletedAt DateTime?    @map("user_deleted_at")
+  userCreatedAt DateTime     @default(now()) @map("user_created_at")
+  userPassword  String       @map("user_password") @db.VarChar(200)
+  userGender    Gender?      @map("user_gender")
+  userRoleId    Int          @map("user_role_id")
+  role          EmRole       @relation(fields: [userRoleId], references: [roleId])
+  projects      EmProjects[] @relation("UserProjects")
+
+  @@index([userRoleId])
+  @@map("em_users")
+}
+
+model EmCountry {
+  countryId   Int       @id @default(autoincrement()) @map("country_id")
+  countryName String    @map("country_name") @db.VarChar(30)
+  states      EmState[]
+
+  @@map("em_countries")
+}
+
+model EmState {
+  stateId   Int        @id @default(autoincrement()) @map("state_id")
+  countryId Int        @map("country_id")
+  stateName String     @map("state_name") @db.VarChar(30)
+  country   EmCountry  @relation(fields: [countryId], references: [countryId])
+  cities    EmCities[]
+
+  @@index([countryId])
+  @@map("em_states")
+}
+
+model EmCities {
+  cityId   Int     @id @default(autoincrement()) @map("city_id")
+  stateId  Int     @map("state_id")
+  cityName String  @map("city_name") @db.VarChar(30)
+  state    EmState @relation(fields: [stateId], references: [stateId])
+
+  @@index([stateId])
+  @@map("em_cities")
+}
+
+model EmProjects {
+  projectId                Int       @id @default(autoincrement()) @map("project_id")
+  projectUserId            Int       @map("project_user_id")
+  projectName              String    @map("project_name") @db.VarChar(50)
+  projectTechnology        String    @map("project_technology") @db.VarChar(50)
+  projectStatus            String    @map("project_status") @db.VarChar(20)
+  projectCreatedAt         DateTime  @default(now()) @map("project_created_at")
+  projectDeletedAt         Boolean? @map("project_deleted_at")
+  projectUpdatedAt         DateTime? @default(now()) @map("project_updated_at")
+  projectStartDate         DateTime? @map("project_start_date")
+  projectDeadlineDate      DateTime? @map("project_deadline_date")
+  projectLead              String?   @map("project_lead") @db.VarChar(50)
+  projectManager           String?   @map("project_manager") @db.VarChar(50)
+  projectClient            String?   @map("project_client") @db.VarChar(50)
+  projectManagementTool    String?   @map("project_management_tool") @db.VarChar(50)
+  projectManagementToolUrl String?   @map("project_management_tool_url") @db.VarChar(100)
+  projectRepoTool          String?   @map("project_repo_tool") @db.VarChar(50)
+  projectRepoToolUrl       String?   @map("project_repo_tool_url") @db.VarChar(100)
+  projectDescription       String?   @map("project_description") @db.Text
+  user                     EmUser    @relation(fields: [projectUserId], references: [userId], name: "UserProjects")
+
+  @@map("em_projects")
+}
