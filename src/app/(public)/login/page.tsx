@@ -21,6 +21,7 @@ const SignIn = () => {
     resolver: zodResolver(signInSchema),
   });
 
+  
   const onSubmit = async (data: SignInData) => {
     const res = await signIn("credentials", {
       redirect: false, 
@@ -32,8 +33,14 @@ const SignIn = () => {
       toast.error("Invalid email or password"); 
     } else {
       toast.success("Login Successful");
-      // router.push("/dashboard"); 
+      router.push("/profile/me"); 
     }
+  };
+
+  // Handle Google sign-in
+  const handleGoogleSignIn = async () => {
+    // 'use server'
+    await signIn("google", { redirect: true });
   };
 
   return (
@@ -80,7 +87,7 @@ const SignIn = () => {
           </form>
           <p className="group relative flex justify-center">OR</p>
           <button
-            onClick={() => signIn("google")} 
+            onClick={handleGoogleSignIn}
             className="mt-0 group relative flex justify-center ml-24 py-2 px-3 border text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Sign In with Google

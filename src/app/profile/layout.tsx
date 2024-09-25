@@ -1,6 +1,7 @@
 // src/pages/dashboard/index.tsx
 import React from 'react';
 import Layout from '../../components/Layout';
+import { signOut } from '../auth';
 
 // const Dashboard: React.FC = () => {
 //   return (

@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
   const isPublicPath = pathname=='/login' || pathname ==='/signup'
 
   if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/',req.url))
+    return NextResponse.redirect(new URL('/profile/me',req.url))
   }
 
   if (!isPublicPath && !token) {
@@ -35,5 +35,5 @@ export async function middleware(req: NextRequest) {
 
 
 export const config = {
-  matcher: ["/", "/signup","/login","/profile/admin"],
+  matcher: ["/", "/signup","/login","/profile/:path*"],
 };

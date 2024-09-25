@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../../globals.css";
 import { Toaster } from "sonner";
+import { SessionProvider } from "next-auth/react";
 
 
 const geistSans = localFont({
@@ -26,6 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
+    <SessionProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -34,5 +37,7 @@ export default function RootLayout({
         <Toaster richColors position="top-right" /> 
       </body>
     </html>
+    </SessionProvider>
+
   );
 }

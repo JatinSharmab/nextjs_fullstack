@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../../lib/prisma";
+import { getSession } from 'next-auth/react';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -41,9 +42,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       userAge,
       userEmail,
       userPhone,
-      userCity,
-      userState,
-      userCountry,
+      // userCity,
+      // userState,
+      // userCountry,
       userGender
     } = body;
 
@@ -53,6 +54,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const user = await prisma.emUser.findUnique({
       where: { userId: id },
     });
+    const userrAge = parseInt(userAge)
 
     if (!user) {
       return NextResponse.json({ message: "User Not Found" }, { status: 401 });
@@ -62,12 +64,12 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       data: {
         userFirstName,
         userLastName,
-        userAge,
+        userAge : userrAge,
         userEmail,
         userPhone,
-        userCity,
-        userState,
-        userCountry,
+        // userCity,
+        // userState,
+        // userCountry,
         userGender,
       },
     });

@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from"next-auth/providers/google"
 import prisma from "../../lib/prisma";
 import { compare } from "bcryptjs";
 import { AdapterUser } from "next-auth/adapters";
@@ -8,6 +9,11 @@ import { User } from "next-auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    }),
+  
     CredentialsProvider({
       name: "Credentials",
       credentials: {
